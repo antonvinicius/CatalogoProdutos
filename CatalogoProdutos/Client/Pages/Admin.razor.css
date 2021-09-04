@@ -1,0 +1,8 @@
+﻿.cp-bloco {
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.cp-bloco:hover {
+    transform: scale(1.09);
+}

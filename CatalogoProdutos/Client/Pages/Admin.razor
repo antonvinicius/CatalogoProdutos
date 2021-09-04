@@ -1,7 +1,26 @@
-﻿@page "/admin" 
+﻿@page "/admin"
+@inject NavigationManager _nav 
 
-<h3>Admin</h3>
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-10">
+    <MudGrid>
+        <MudItem xs="12" lg="6">
+            <div class="cp-bloco" @onclick="@(() => _nav.NavigateTo("produtos"))">
+                <MudPaper Class="mx-auto d-flex align-center justify-center" Width="100%" MaxWidth="500px" Height="500px">
+                    <h1>Produtos</h1>
+                </MudPaper>
+            </div>
+        </MudItem>
+        <MudItem xs="12" lg="6">
+            <div class="cp-bloco" @onclick="@(() => _nav.NavigateTo("categorias"))">
+                <MudPaper Class="mx-auto d-flex align-center justify-center" Width="100%" MaxWidth="500px" Height="500px">
+                    <h1>Categorias</h1>
+                </MudPaper>
+            </div>
+        </MudItem>
+    </MudGrid>
+</MudContainer>
 
 @code {
-
+    string email;
+    string password;
 }
