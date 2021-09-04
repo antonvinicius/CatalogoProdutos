@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using CatalogoProdutos.Server.Data;
-using CatalogoProdutos.Server.Models;
+using CatalogoProdutos.Shared;
 
 namespace CatalogoProdutos.Server.Controllers
 {

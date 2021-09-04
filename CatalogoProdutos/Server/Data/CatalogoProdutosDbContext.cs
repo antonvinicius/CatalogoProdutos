@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CatalogoProdutos.Server.Models;
+using CatalogoProdutos.Shared;
 using Microsoft.EntityFrameworkCore;
 
 namespace CatalogoProdutos.Server.Data

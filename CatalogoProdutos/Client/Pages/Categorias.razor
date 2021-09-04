@@ -1,7 +1,25 @@
 ﻿@page "/categorias"
 
-<h3>Categorias</h3>
+<CrudElement Items="categorias" EntityName="Categorias"></CrudElement>
 
 @code {
+    List<Categoria> categorias;
+
+    protected override void OnInitialized()
+    {
+        categorias = new List<Categoria>()
+        {
+            new Categoria()
+            {
+                Id = 1,
+                Nome = "Eletrônicos"
+            },
+            new Categoria()
+            {
+                Id = 2,
+                Nome = "Celulares"
+            }
+        };
+    }
 
 }

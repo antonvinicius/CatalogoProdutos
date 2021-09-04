@@ -1,7 +1,33 @@
 ﻿@page "/produtos"
 
-<h3>Produtos</h3>
+<CrudElement Items="produtos" EntityName="Produtos"></CrudElement>
 
 @code {
+    List<Produto> produtos;
 
+    protected override void OnInitialized()
+    {
+        produtos = new List<Produto>()
+        {
+            new Produto()
+            {
+                Id = 1,
+                Nome = "Smartphone Galaxy S3",
+                CategoriaId = 1,
+                Preco = 30.99
+            },
+            new Produto()
+            {
+                Id = 2,
+                Nome = "Iphone 10",
+                Preco = 83.45
+            },
+        new Produto()
+            {
+                Id = 3,
+                Nome = "Notebook i5 9300 GTX 1050 Ti",
+                Preco = 83.45
+            }
+        };
+    }
 }

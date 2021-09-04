@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CatalogoProdutos.Server.Models
+namespace CatalogoProdutos.Shared
 {
     public class Produto
     {
@@ -12,5 +12,10 @@ namespace CatalogoProdutos.Server.Models
         public double Preco { get; set; }
         public int CategoriaId { get; set; }
         public virtual Categoria Categoria { get; set; }
+
+        public override string ToString()
+        {
+            return Nome;
+        }
     }
 }

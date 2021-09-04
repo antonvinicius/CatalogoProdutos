@@ -1,0 +1,33 @@
+﻿@typeparam T
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="mt-5">
+    <MudText Typo="Typo.h5" Class="mb-10">Visão geral</MudText>
+    <MudPaper Elevation="1" Width="100%" MaxWidth="300px" Height="130px" Class="d-flex flex-column justify-center align-center pa-10">
+        <MudText Typo="Typo.h6">Total de @EntityName</MudText>
+        <MudText Typo="Typo.h4"><b>@Items.Count</b></MudText>
+    </MudPaper>
+</MudContainer>
+
+<MudContainer Class="mt-5">
+    <div class="d-flex justify-space-between">
+        <MudText Typo="Typo.h5" Class="mb-10">@EntityName</MudText>
+        <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" Size="Size.Small" IconSize="Size.Small" Label="Cadastrar novo item" Class="ma-2" />
+    </div>
+    <MudExpansionPanels DisableBorders="true" Elevation="0">
+        @foreach (var item in Items)
+        {
+            <MudExpansionPanel Text="@item.ToString()">
+                <MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Color="Color.Error" Size="Size.Small" Class="ma-2" />
+                <MudIconButton Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Class="ma-2" />
+            </MudExpansionPanel>
+        }
+    </MudExpansionPanels>
+</MudContainer>
+
+@code {
+    [Parameter]
+    public List<T> Items { get; set; }
+
+    [Parameter]
+    public string EntityName { get; set; }
+}
