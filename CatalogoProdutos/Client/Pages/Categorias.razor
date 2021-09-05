@@ -1,14 +1,27 @@
 ﻿@page "/categorias"
 
-<CrudElement Items="categorias" EntityName="Categorias"></CrudElement>
+<CrudElement Items="categorias" EntityName="Categorias" CreateCallBack="() => createModal.Show()">
+    @foreach (var item in categorias)
+    {
+        <PainelCategoria Categoria="item"></PainelCategoria>
+    }
+</CrudElement>
+
+<MessageModal @ref="createModal" CorBotaoSubmit="Color.Primary" Icone="@Icons.Filled.Create" Submit="CreateItem" TextoCancelar="Cancelar" TextoSubmit="Criar" Title="Cadastrar nova categoria">
+    <EditForm Model="categoria">
+        <MudTextField Label="Nome" @bind-Value="categoria.Nome" For="() => categoria.Nome" Class="ma-3"></MudTextField>
+    </EditForm>
+</MessageModal>
 
 @code {
     List<Categoria> categorias;
 
+    Categoria categoria = new Categoria();
+
     protected override void OnInitialized()
     {
         categorias = new List<Categoria>()
-        {
+{
             new Categoria()
             {
                 Id = 1,
@@ -20,6 +33,17 @@
                 Nome = "Celulares"
             }
         };
+    }
+
+    MessageModal createModal;
+
+    void CreateItem(bool? result)
+    {
+        if (result != null)
+        {
+            categorias.Add(categoria);
+            categoria = new Categoria();
+        }
     }
 
 }

@@ -1,4 +1,6 @@
 ﻿@inherits LayoutComponentBase
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+
 
 <MudThemeProvider Theme="currentTheme" />
 <MudDialogProvider />
@@ -33,15 +35,24 @@
         currentTheme = defaultTheme;
     }
 
-    void DarkMode()
+    protected override async Task OnParametersSetAsync()
+    {
+        var theme = await localStorage.GetItemAsync<string>("theme");
+        if (theme == "dark")
+            currentTheme = darkTheme;
+    }
+
+    async void DarkMode()
     {
         if (currentTheme == defaultTheme)
         {
             currentTheme = darkTheme;
+            await localStorage.SetItemAsync("theme", "dark");
         }
         else
         {
             currentTheme = defaultTheme;
+            await localStorage.SetItemAsync("theme", "default");
         }
     }
 

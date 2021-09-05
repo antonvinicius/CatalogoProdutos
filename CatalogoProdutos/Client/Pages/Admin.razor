@@ -1,26 +1,33 @@
 ﻿@page "/admin"
-@inject NavigationManager _nav 
+@inject NavigationManager _nav
 
-<MudContainer MaxWidth="MaxWidth.Large" Class="mt-10">
-    <MudGrid>
-        <MudItem xs="12" lg="6">
-            <div class="cp-bloco" @onclick="@(() => _nav.NavigateTo("produtos"))">
-                <MudPaper Class="mx-auto d-flex align-center justify-center" Width="100%" MaxWidth="500px" Height="500px">
-                    <h1>Produtos</h1>
-                </MudPaper>
-            </div>
-        </MudItem>
-        <MudItem xs="12" lg="6">
-            <div class="cp-bloco" @onclick="@(() => _nav.NavigateTo("categorias"))">
-                <MudPaper Class="mx-auto d-flex align-center justify-center" Width="100%" MaxWidth="500px" Height="500px">
-                    <h1>Categorias</h1>
-                </MudPaper>
-            </div>
-        </MudItem>
-    </MudGrid>
+<MudContainer MaxWidth="MaxWidth.Medium" Class="mt-10 pa-3">
+    <MudText Typo="Typo.h5">O que deseja visualizar hoje? 🤔</MudText>
+    <div class="mt-10">
+        <MudRadioGroup @bind-SelectedOption="@selectedOption">
+            <MudPaper Elevation="1" Width="100%" Height="100px" Class="ma-5 d-flex align-center pa-10">
+                <MudRadio Option="@("categorias")" Color="Color.Primary"></MudRadio>
+                <MudText Typo="Typo.h6">Categorias</MudText>
+            </MudPaper>
+
+            <MudPaper Elevation="1" Width="100%" Height="100px" Class="ma-5 d-flex align-center pa-10">
+                <MudRadio Option="@("produtos")" Color="Color.Primary"></MudRadio>
+                <MudText Typo="Typo.h6">Produtos</MudText>
+            </MudPaper>
+        </MudRadioGroup>
+    </div>
+    <div class="mt-10 d-flex justify-space-between align-center">
+        <MudButton Variant="Variant.Filled" Size="Size.Medium" Color="Color.Primary" Class="ma-2" OnClick="IrParaPagina">Ir para a página</MudButton>
+        <MudLink @onclick="() => selectedOption = null">Limpar Opções</MudLink>
+    </div>
 </MudContainer>
 
 @code {
-    string email;
-    string password;
+    string selectedOption;
+
+    void IrParaPagina()
+    {
+        if (!string.IsNullOrEmpty(selectedOption))
+            _nav.NavigateTo(selectedOption);
+    }
 }

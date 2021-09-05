@@ -1,7 +1,10 @@
 ﻿@typeparam T
 
 <MudContainer MaxWidth="MaxWidth.Large" Class="mt-5">
-    <MudText Typo="Typo.h5" Class="mb-10">Visão geral</MudText>
+    <div class="d-flex justify-space-between align-center">
+        <MudText Typo="Typo.h5" Class="mb-10">Visão geral</MudText>
+        <MudFab Icon="@Icons.Material.Filled.ArrowBack" Label="Voltar" @onclick="@(() => NavigationManager.NavigateTo("admin"))" />
+    </div>
     <MudPaper Elevation="1" Width="100%" MaxWidth="300px" Height="130px" Class="d-flex flex-column justify-center align-center pa-10">
         <MudText Typo="Typo.h6">Total de @EntityName</MudText>
         <MudText Typo="Typo.h4"><b>@Items.Count</b></MudText>
@@ -11,23 +14,32 @@
 <MudContainer Class="mt-5">
     <div class="d-flex justify-space-between">
         <MudText Typo="Typo.h5" Class="mb-10">@EntityName</MudText>
-        <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" Size="Size.Small" IconSize="Size.Small" Label="Cadastrar novo item" Class="ma-2" />
+        <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" Size="Size.Small" IconSize="Size.Small" Label="Cadastrar novo item" Class="ma-2" @onclick="CallBack" />
     </div>
-    <MudExpansionPanels DisableBorders="true" Elevation="0">
-        @foreach (var item in Items)
-        {
-            <MudExpansionPanel Text="@item.ToString()">
-                <MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Color="Color.Error" Size="Size.Small" Class="ma-2" />
-                <MudIconButton Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Class="ma-2" />
-            </MudExpansionPanel>
-        }
+    <MudExpansionPanels DisableBorders="true" Elevation="0" Class="mb-10">
+        @ChildContent
     </MudExpansionPanels>
+
 </MudContainer>
 
 @code {
+    [Inject]
+    public NavigationManager NavigationManager { get; set; }
+
     [Parameter]
     public List<T> Items { get; set; }
 
     [Parameter]
     public string EntityName { get; set; }
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public EventCallback CreateCallBack { get; set; }
+
+    async void CallBack()
+    {
+        await CreateCallBack.InvokeAsync();
+    }
 }

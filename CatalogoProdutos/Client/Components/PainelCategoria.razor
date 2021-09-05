@@ -1,0 +1,34 @@
+﻿<MudExpansionPanel Text="@Categoria.ToString()">
+    <MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Color="Color.Error" Size="Size.Small" Class="ma-2" @onclick="() => msgModDel.Show()" />
+    <MudIconButton Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Class="ma-2" @onclick="() => msgModEdit.Show()" />
+</MudExpansionPanel>
+
+<MessageModal @ref="msgModDel" Title="Atenção" CorBotaoSubmit="Color.Error" Icone="@Icons.Material.Filled.DeleteForever" TextoSubmit="Deletar!" TextoCancelar="Cancelar">
+    <MudText Typo="Typo.h6">Tem certeza que deseja deletar a categoria @Categoria.Nome?</MudText>
+</MessageModal>
+
+<MessageModal @ref="msgModEdit" Title="Editar" CorBotaoSubmit="Color.Primary" Icone="@Icons.Material.Filled.Edit" TextoSubmit="Editar" TextoCancelar="Cancelar">
+    <EditForm Model="Categoria">
+        <MudTextField Label="Nome" @bind-Value="Categoria.Nome" For="() => Categoria.Nome" Class="ma-3"></MudTextField>
+    </EditForm>
+</MessageModal>
+
+@code {
+    [Parameter]
+    public Categoria Categoria { get; set; }
+
+    MessageModal msgModEdit;
+    MessageModal msgModDel;
+
+    void OnDeleted(bool? result)
+    {
+        if (result != null)
+            Console.WriteLine($"Categoria {Categoria.Nome} deletada!");
+    }
+
+    void OnEdit(bool? result)
+    {
+        if (result != null)
+            Console.WriteLine($"Categoria {Categoria.Nome} editada!");
+    }
+}
