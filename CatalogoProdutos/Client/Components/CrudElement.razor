@@ -7,7 +7,7 @@
     </div>
     <MudPaper Elevation="1" Width="100%" MaxWidth="300px" Height="130px" Class="d-flex flex-column justify-center align-center pa-10">
         <MudText Typo="Typo.h6">Total de @EntityName</MudText>
-        <MudText Typo="Typo.h4"><b>@Items.Count</b></MudText>
+        <MudText Typo="Typo.h4"><b>@TotalCount</b></MudText>
     </MudPaper>
 </MudContainer>
 
@@ -25,6 +25,9 @@
 @code {
     [Inject]
     public NavigationManager NavigationManager { get; set; }
+
+    [Parameter]
+    public int TotalCount { get; set; }
 
     [Parameter]
     public List<T> Items { get; set; }

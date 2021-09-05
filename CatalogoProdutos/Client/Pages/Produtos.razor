@@ -1,11 +1,20 @@
 ﻿@page "/produtos"
 
-<CrudElement Items="produtos" EntityName="Produtos" CreateCallBack="() => createModal.Show()">
+<CrudElement Items="produtos" TotalCount="totalCount" EntityName="Produtos" CreateCallBack="() => createModal.Show()">
+    <MudAutocomplete @ref="mud" Immediate="true" T="string" Placeholder="Busca" SearchFunc="@Search"
+                     ResetValueOnEmptyText="true" ValueChanged="OnSearchResult" />
+
+    @if (!string.IsNullOrEmpty(busca))
+    {
+        <MudButton Variant="Variant.Text" Size="Size.Small" Class="ma-2" @onclick="Limpar">Limpar</MudButton>
+    }
+
     @foreach (var item in produtos)
     {
         <ProductPanel Produto="item"></ProductPanel>
     }
 </CrudElement>
+
 
 <MessageModal @ref="createModal" CorBotaoSubmit="Color.Primary" Icone="@Icons.Filled.Create" Submit="CreateItem" TextoCancelar="Cancelar" TextoSubmit="Criar" Title="Cadastrar novo produto">
     <EditForm Model="produto">
@@ -16,14 +25,51 @@
 
 
 @code {
-    Produto produto = new Produto();
+    int totalCount;
+    string busca;
+    List<string> produtosNomes = new List<string>();
 
-    List<Produto> produtos;
+    MudAutocomplete<string> mud;
 
-    protected override void OnInitialized()
+    void Limpar()
     {
+        mud.Clear();
+        busca = null;
         produtos = new List<Produto>()
+{
+            new Produto()
+            {
+                Id = 1,
+                Nome = "Smartphone Galaxy S3",
+                CategoriaId = 1,
+                Preco = 30.99
+            },
+            new Produto()
+            {
+                Id = 2,
+                Nome = "Iphone 10",
+                Preco = 83.45
+            },
+            new Produto()
+            {
+                Id = 3,
+                Nome = "Notebook i5 9300 GTX 1050 Ti",
+                Preco = 83.45
+            }
+        };
+    }
+
+    void OnSearchResult(string value)
     {
+        busca = value;
+        if (!string.IsNullOrEmpty(value))
+        {
+            produtos = produtos.Where(x => x.Nome.Contains(value)).ToList();
+        }
+        else
+        {
+            produtos = new List<Produto>()
+{
             new Produto()
             {
                 Id = 1,
@@ -44,6 +90,55 @@
                 Preco = 83.45
             }
         };
+        }
+    }
+
+    async Task<IEnumerable<string>> Search(string value)
+    {
+        // In real life use an asynchronous function for fetching data from an api.
+        await Task.Delay(5);
+
+        // if text is null or empty, show complete list
+        if (string.IsNullOrEmpty(value))
+            return produtosNomes;
+        return produtosNomes.Where(x => x.Contains(value, StringComparison.InvariantCultureIgnoreCase));
+    }
+
+    Produto produto = new Produto();
+
+    List<Produto> produtos;
+
+    protected override void OnInitialized()
+    {
+        produtos = new List<Produto>()
+{
+            new Produto()
+            {
+                Id = 1,
+                Nome = "Smartphone Galaxy S3",
+                CategoriaId = 1,
+                Preco = 30.99
+            },
+            new Produto()
+            {
+                Id = 2,
+                Nome = "Iphone 10",
+                Preco = 83.45
+            },
+        new Produto()
+            {
+                Id = 3,
+                Nome = "Notebook i5 9300 GTX 1050 Ti",
+                Preco = 83.45
+            }
+        };
+
+        totalCount = produtos.Count;
+
+        foreach (var item in produtos)
+        {
+            produtosNomes.Add(item.Nome);
+        }
     }
 
     MessageModal createModal;
@@ -53,6 +148,7 @@
         if (result != null)
         {
             produtos.Add(produto);
+            produtosNomes.Add(produto.Nome);
             produto = new Produto();
         }
     }
