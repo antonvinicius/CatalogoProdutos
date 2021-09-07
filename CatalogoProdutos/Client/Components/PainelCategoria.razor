@@ -1,15 +1,19 @@
 ﻿<MudExpansionPanel Text="@Categoria.ToString()">
-    <MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Color="Color.Error" Size="Size.Small" Class="ma-2" @onclick="() => msgModDel.Show()" />
-    <MudIconButton Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Class="ma-2" @onclick="() => msgModEdit.Show()" />
+    <MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Color="Color.Error" Size="Size.Small" Class="ma-2" @onclick="() => msgModDel.mbox.Show()" />
+    <MudIconButton Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Class="ma-2" @onclick="() => msgModEdit.mbox.Show()" />
 </MudExpansionPanel>
 
-<MessageModal @ref="msgModDel" Title="Atenção" CorBotaoSubmit="Color.Error" Icone="@Icons.Material.Filled.DeleteForever" TextoSubmit="Deletar!" TextoCancelar="Cancelar">
-    <MudText Typo="Typo.h6">Tem certeza que deseja deletar a categoria @Categoria.Nome?</MudText>
+<MessageModal @ref="msgModDel" Title="Atenção" Icone="@Icons.Material.Filled.DeleteForever">
+    <EditForm Model="Categoria" OnValidSubmit="OnDeleted">
+        <MudText Typo="Typo.h6">Tem certeza que deseja deletar a categoria @Categoria.Nome?</MudText>
+        <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Error" Class="ml-auto">Deletar</MudButton>
+    </EditForm>
 </MessageModal>
 
-<MessageModal @ref="msgModEdit" Title="Editar" CorBotaoSubmit="Color.Primary" Icone="@Icons.Material.Filled.Edit" TextoSubmit="Editar" TextoCancelar="Cancelar">
-    <EditForm Model="Categoria">
+<MessageModal @ref="msgModEdit" Title="Editar" Icone="@Icons.Material.Filled.Edit">
+    <EditForm Model="Categoria" OnValidSubmit="OnEdit">
         <MudTextField Label="Nome" @bind-Value="Categoria.Nome" For="() => Categoria.Nome" Class="ma-3"></MudTextField>
+        <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Primary" Class="ml-auto">Editar</MudButton>
     </EditForm>
 </MessageModal>
 
@@ -20,15 +24,15 @@
     MessageModal msgModEdit;
     MessageModal msgModDel;
 
-    void OnDeleted(bool? result)
+    void OnDeleted()
     {
-        if (result != null)
-            Console.WriteLine($"Categoria {Categoria.Nome} deletada!");
+        Console.WriteLine($"Categoria {Categoria.Nome} deletada!");
+        msgModDel.mbox.Close();
     }
 
-    void OnEdit(bool? result)
+    void OnEdit()
     {
-        if (result != null)
-            Console.WriteLine($"Categoria {Categoria.Nome} editada!");
+        Console.WriteLine($"Categoria {Categoria.Nome} editada!");
+        msgModEdit.mbox.Close();
     }
 }

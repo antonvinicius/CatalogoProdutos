@@ -1,10 +1,7 @@
-﻿<MudMessageBox @ref="mbox" Title="@Title" CancelText="@TextoCancelar">
+﻿<MudMessageBox @ref="mbox" Title="@Title" CancelText="@null" YesText="@null">
     <MessageContent>
         @ChildContent
     </MessageContent>
-    <YesButton>
-        <MudButton Variant="Variant.Filled" Color="@CorBotaoSubmit" StartIcon="@Icone">@TextoSubmit</MudButton>
-    </YesButton>
 </MudMessageBox>
 @code {
     [Parameter]
@@ -17,28 +14,10 @@
     public string Title { get; set; }
 
     [Parameter]
-    public string TextoCancelar { get; set; }
-
-    [Parameter]
-    public string TextoSubmit { get; set; }
-
-    [Parameter]
-    public Color CorBotaoSubmit { get; set; }
-
-    [Parameter]
     public string Icone { get; set; }
 
     [Parameter]
     public MudMessageBox mbox { get; set; }
 
     bool? result;
-
-
-    public async Task Show()
-    {
-        bool? result = await mbox.Show();
-        await Submit.InvokeAsync(result);
-        mbox.Close();
-        StateHasChanged();
-    }
 }

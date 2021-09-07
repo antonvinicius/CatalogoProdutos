@@ -1,7 +1,8 @@
 ﻿@page "/produtos"
 
-<CrudElement Items="produtos" TotalCount="totalCount" EntityName="Produtos" CreateCallBack="() => createModal.Show()">
-    <MudAutocomplete @ref="mud" Immediate="true" T="string" Placeholder="Busca" SearchFunc="@Search"
+
+<CrudElement Items="produtos" TotalCount="totalCount" EntityName="Produtos" CreateCallBack="() => createModal.mbox.Show()">
+    <MudAutocomplete @ref="mud" Immediate="true" T="string" Placeholder="Busca" Class="mb-5" SearchFunc="@Search"
                      ResetValueOnEmptyText="true" ValueChanged="OnSearchResult" />
 
     @if (!string.IsNullOrEmpty(busca))
@@ -11,26 +12,37 @@
 
     @foreach (var item in produtos)
     {
-        <ProductPanel Produto="item"></ProductPanel>
+        <ProductPanel Categorias="categorias" Produto="item"></ProductPanel>
     }
 </CrudElement>
 
 
-<MessageModal @ref="createModal" CorBotaoSubmit="Color.Primary" Icone="@Icons.Filled.Create" Submit="CreateItem" TextoCancelar="Cancelar" TextoSubmit="Criar" Title="Cadastrar novo produto">
-    <EditForm Model="produto">
+<MessageModal @ref="createModal" Icone="@Icons.Filled.Create" Submit="CreateItem" Title="Cadastrar novo produto">
+    <EditForm Model="produto" OnValidSubmit="CreateItem">
         <MudTextField Label="Nome" @bind-Value="produto.Nome" For="() => produto.Nome" Class="ma-3"></MudTextField>
         <MudTextField Label="Preço" @bind-Value="produto.Preco" For="() => produto.Preco" Class="ma-3"></MudTextField>
+        <MudSelect T="int" Label="Categoria" Strict="true">
+            @foreach (var categoria in categorias)
+            {
+                <MudSelectItem T="int" Value="categoria.Id">@categoria.Nome</MudSelectItem>
+            }
+        </MudSelect>
+        <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Primary" Class="ml-auto mt-3">Cadastrar</MudButton>
     </EditForm>
 </MessageModal>
 
 
 @code {
-    int totalCount;
-    string busca;
-    List<string> produtosNomes = new List<string>();
+    private int totalCount;
+    private string busca;
+    private List<string> produtosNomes = new List<string>();
+    private Produto produto = new Produto();
+    private List<Produto> produtos;
+    private List<Categoria> categorias;
+    private MessageModal createModal;
+    private MudAutocomplete<string> mud;
 
-    MudAutocomplete<string> mud;
-
+    // Função para limpar o mecanismo de busca
     void Limpar()
     {
         mud.Clear();
@@ -59,6 +71,7 @@
         };
     }
 
+    // Recarrega os items no valor passado
     void OnSearchResult(string value)
     {
         busca = value;
@@ -93,6 +106,7 @@
         }
     }
 
+    // Busca o valor passado
     async Task<IEnumerable<string>> Search(string value)
     {
         // In real life use an asynchronous function for fetching data from an api.
@@ -104,10 +118,7 @@
         return produtosNomes.Where(x => x.Contains(value, StringComparison.InvariantCultureIgnoreCase));
     }
 
-    Produto produto = new Produto();
-
-    List<Produto> produtos;
-
+    // Carrega a lista inicial dos items
     protected override void OnInitialized()
     {
         produtos = new List<Produto>()
@@ -132,6 +143,24 @@
                 Preco = 83.45
             }
         };
+        categorias = new List<Categoria>()
+{
+            new Categoria()
+            {
+                Id = 1,
+                Nome = "Computadores",
+            },
+            new Categoria()
+            {
+                Id = 2,
+                Nome = "Acessórios"
+            },
+            new Categoria()
+            {
+                Id = 3,
+                Nome = "Celulares"
+            }
+        };
 
         totalCount = produtos.Count;
 
@@ -141,15 +170,13 @@
         }
     }
 
-    MessageModal createModal;
-
-    void CreateItem(bool? result)
+    // Adiciona um novo item
+    void CreateItem()
     {
-        if (result != null)
-        {
-            produtos.Add(produto);
-            produtosNomes.Add(produto.Nome);
-            produto = new Produto();
-        }
+        produtos.Add(produto);
+        produtosNomes.Add(produto.Nome);
+        produto = new Produto();
+        totalCount = categorias.Count;
+        createModal.mbox.Close();
     }
 }

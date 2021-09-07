@@ -1,16 +1,26 @@
 ﻿<MudExpansionPanel Text="@Produto.ToString()">
-    <MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Color="Color.Error" Size="Size.Small" Class="ma-2" @onclick="() => msgModDel.Show()" />
-    <MudIconButton Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Class="ma-2" @onclick="() => msgModEdit.Show()" />
+    <MudIconButton Icon="@Icons.Material.Filled.Delete" Variant="Variant.Filled" Color="Color.Error" Size="Size.Small" Class="ma-2" @onclick="() => msgModDel.mbox.Show()" />
+    <MudIconButton Icon="@Icons.Material.Filled.Edit" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" Class="ma-2" @onclick="() => msgModEdit.mbox.Show()" />
 </MudExpansionPanel>
 
-<MessageModal @ref="msgModDel" Title="Atenção" CorBotaoSubmit="Color.Error" Icone="@Icons.Material.Filled.DeleteForever" TextoSubmit="Deletar!" TextoCancelar="Cancelar">
-    <MudText Typo="Typo.h6">Tem certeza que deseja deletar o produto @Produto.Nome?</MudText>
+<MessageModal @ref="msgModDel" Title="Atenção" Icone="@Icons.Material.Filled.DeleteForever">
+    <EditForm Model="Produto" OnValidSubmit="OnDeleted">
+        <MudText Typo="Typo.h6">Tem certeza que deseja deletar o produto @Produto.Nome?</MudText>
+        <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Error" Class="ml-auto">Deletar</MudButton>
+    </EditForm>
 </MessageModal>
 
-<MessageModal @ref="msgModEdit" Title="Editar" CorBotaoSubmit="Color.Primary" Icone="@Icons.Material.Filled.Edit" TextoSubmit="Editar" TextoCancelar="Cancelar">
-    <EditForm Model="Produto">
+<MessageModal @ref="msgModEdit" Title="Editar" Icone="@Icons.Material.Filled.Edit">
+    <EditForm Model="Produto" OnValidSubmit="OnEdit">
         <MudTextField Label="Nome" @bind-Value="Produto.Nome" For="() => Produto.Nome" Class="ma-3"></MudTextField>
         <MudTextField Label="Preço" @bind-Value="Produto.Preco" For="() => Produto.Preco" Class="ma-3"></MudTextField>
+        <MudSelect T="int" Label="Categoria" Strict="true">
+            @foreach (var categoria in Categorias)
+            {
+                <MudSelectItem T="int" Value="categoria.Id">@categoria.Nome</MudSelectItem>
+            }
+        </MudSelect>
+        <MudButton Variant="Variant.Filled" ButtonType="ButtonType.Submit" Color="Color.Primary" Class="ml-auto mt-5">Editar</MudButton>
     </EditForm>
 </MessageModal>
 
@@ -18,18 +28,19 @@
     [Parameter]
     public Produto Produto { get; set; }
 
+    [Parameter]
+    public List<Categoria> Categorias { get; set; }
+
     MessageModal msgModEdit;
     MessageModal msgModDel;
 
-    void OnDeleted(bool? result)
+    void OnDeleted()
     {
-        if (result != null)
-            Console.WriteLine($"Produto {Produto.Nome} deletado!");
+        Console.WriteLine($"Produto {Produto.Nome} deletado!");
     }
 
-    void OnEdit(bool? result)
+    void OnEdit()
     {
-        if (result != null)
-            Console.WriteLine($"Produto {Produto.Nome} editado!");
+        Console.WriteLine($"Produto {Produto.Nome} editado!");
     }
 }
