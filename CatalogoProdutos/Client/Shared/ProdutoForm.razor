@@ -1,0 +1,24 @@
+﻿@inject HttpClient http
+
+<MudTextField Label="Nome"
+              @bind-Value="@Produto.Nome" For="@(() => Produto.Nome)" />
+<MudTextField Label="Preço"
+              @bind-Value="@Produto.Preco" For="@(() => Produto.Preco)" />
+<MudSelect @bind-Value="@Produto.CategoriaId" Label="Categoria" For="@(() => Produto.CategoriaId)" id="select">
+    @foreach (var categoria in Categorias)
+    {
+        <MudSelectItem Value="categoria.Id">@categoria.Nome</MudSelectItem>
+    }
+</MudSelect>
+
+@code {
+    [Parameter]
+    public Produto Produto { get; set; }
+    [Parameter]
+    public List<Categoria> Categorias { get; set; } = new List<Categoria>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Categorias = await http.GetFromJsonAsync<List<Categoria>>("api/categorias");
+    }
+}

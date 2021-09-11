@@ -5,42 +5,46 @@
     <TitleContent>
         <MudText Typo="Typo.h6">
             <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3 mb-n1" />
-            Editar Categoria
+            Editar Produto
         </MudText>
     </TitleContent>
     <DialogContent>
-        <CategoriaForm Categoria="categoriaModal"/>
+        <ProdutoForm Produto="produtoModal"/>
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">Cancelar</MudButton>
-        <MudButton Color="Color.Primary" OnClick="EditCategoria">Editar</MudButton>
+        <MudButton Color="Color.Primary" OnClick="EditProduto">Editar</MudButton>
     </DialogActions>
 </MudDialog>
 @code {
     // Variaveis privadas para evitar binding com model
-    private Categoria categoriaModal = new Categoria();
+    private Produto produtoModal = new Produto();
 
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
 
-    [Parameter] public Categoria item { get; set; }
+    [Parameter] public Produto item { get; set; }
 
     private void Cancel()
     {
         MudDialog.Cancel();
     }
 
-    private async Task EditCategoria()
+    private async Task EditProduto()
     {
-        item.Nome = categoriaModal.Nome;
+        item.Nome = produtoModal.Nome;
+        item.Preco = produtoModal.Preco;
+        item.CategoriaId = produtoModal.CategoriaId;
 
-        await http.PutAsJsonAsync<Categoria>($"api/categorias/{item.Id}", item);
-        Snackbar.Add("Categoria Editada", Severity.Success);
+        await http.PutAsJsonAsync<Produto>($"api/produtos/{item.Id}", item);
+        Snackbar.Add("Produto Editada", Severity.Success);
         MudDialog.Close(DialogResult.Ok(item));
     }
 
     // Inicializacao
     protected override void OnInitialized()
     {
-        categoriaModal.Nome = item.Nome;
+        produtoModal.Nome = item.Nome;
+        produtoModal.Preco = item.Preco;
+        produtoModal.CategoriaId = item.CategoriaId;
     }
 }

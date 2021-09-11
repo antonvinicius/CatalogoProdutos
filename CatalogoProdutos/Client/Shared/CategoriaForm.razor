@@ -1,0 +1,7 @@
+﻿<MudTextField Label="Nome"
+              @bind-Value="Categoria.Nome" For="@(() => Categoria.Nome)" />
+
+@code {
+    [Parameter]
+    public Categoria Categoria { get; set; }
+}

@@ -1,7 +1,7 @@
 ﻿<MudCard>
     <MudCardContent>
-        <MudText>Adicionar Categoria</MudText>
-        <CategoriaForm Categoria="Categoria"/>
+        <MudText>Adicionar Produto</MudText>
+        <ProdutoForm Produto="Produto" />
     </MudCardContent>
     <MudCardActions>
         <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Cadastrar</MudButton>
@@ -10,5 +10,5 @@
 
 @code {
     [CascadingParameter]
-    public Categoria Categoria { get; set; }
+    public Produto Produto { get; set; }
 }

@@ -1,0 +1,41 @@
+﻿@inject ISnackbar Snackbar
+
+<MudCard>
+    <MudCardContent>
+        <MudText>@Produto.Nome</MudText>
+        <MudText>@Produto.Preco</MudText>
+    </MudCardContent>
+    <MudCardActions Class="justify-space-around">
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="Editar">Editar</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Secondary" @onclick="Deletar">Deletar</MudButton>
+    </MudCardActions>
+</MudCard>
+
+@code {
+    [CascadingParameter(Name = "Model")]
+    public Produto Produto { get; set; }
+
+    [CascadingParameter(Name = "Crud")]
+    public Crud<Produto, EditarProdutoDialog> Crud { get; set; }
+
+    [Inject] private IDialogService DialogService { get; set; }
+
+    private async void Deletar()
+    {
+        bool? result = await DialogService.ShowMessageBox(
+            "Atenção",
+            "Tem certeza que deseja deletar este produto?",
+            yesText: "Deletar!", cancelText: "Cancelar");
+
+        if (result == true)
+        {
+            await Crud.Delete(Produto.Id);
+            Snackbar.Add("Produto deletado!", Severity.Success);
+        }
+    }
+
+    private async Task Editar()
+    {
+        await Crud.Editar(Produto);
+    }
+}
