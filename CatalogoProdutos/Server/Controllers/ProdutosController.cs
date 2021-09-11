@@ -21,6 +21,12 @@ namespace CatalogoProdutos.Server.Controllers
             _context = context;
         }
 
+        [HttpGet("categoria/{id:int}")]
+        public async Task<ActionResult<IEnumerable<Produto>>> GetProdutosPorCategoria(int id)
+        {
+            return await _context.Produtos.Where(x => x.CategoriaId == id).ToListAsync();
+        }
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Produto>>> GetProdutos()
         {
