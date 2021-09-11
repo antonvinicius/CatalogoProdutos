@@ -1,0 +1,46 @@
+﻿@inject ISnackbar Snackbar
+@inject HttpClient http
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Edit" Class="mr-3 mb-n1" />
+            Editar Categoria
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudTextField @bind-Value="@nome" Label="Nome"/>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancelar</MudButton>
+        <MudButton Color="Color.Primary" OnClick="EditCategoria">Editar</MudButton>
+    </DialogActions>
+</MudDialog>
+@code {
+    // Variaveis privadas para evitar binding com model
+    private string nome;
+
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    [Parameter] public Categoria categoria { get; set; }
+
+    private void Cancel()
+    {
+        MudDialog.Cancel();
+    }
+
+    private async Task EditCategoria()
+    {
+        categoria.Nome = nome;
+
+        await http.PutAsJsonAsync<Categoria>($"api/categorias/{categoria.Id}", categoria);
+        Snackbar.Add("Categoria Editada", Severity.Success);
+        MudDialog.Close(DialogResult.Ok(categoria));
+    }
+
+    // Inicializacao
+    protected override void OnInitialized()
+    {
+        nome = categoria.Nome;
+    }
+}

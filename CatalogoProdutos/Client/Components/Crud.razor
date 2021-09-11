@@ -1,0 +1,38 @@
+﻿@typeparam T
+@typeparam TDialog
+
+@page "/items"
+@inject HttpClient http
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
+
+<MudContainer MaxWidth="MaxWidth.Large">
+    <MudContainer MaxWidth="MaxWidth.Small" Class="mt-5">
+        <CascadingValue Value="@Model">
+            <EditForm Model="@Model" OnValidSubmit="OnValidSubmit">
+                <DataAnnotationsValidator />
+                @ItemAdicionar
+            </EditForm>
+        </CascadingValue>
+    </MudContainer>
+
+    <div class="mt-6">
+        @if (items != null)
+        {
+            <MudGrid>
+                @foreach (var item in items)
+                {
+                    <MudItem xs="4">
+                        <CascadingValue Value="item">
+                            @ItemIndividual
+                        </CascadingValue>
+                    </MudItem>
+                }
+            </MudGrid>
+        }
+        else
+        {
+            <MudText>Carregando...</MudText>
+        }
+    </div>
+</MudContainer>

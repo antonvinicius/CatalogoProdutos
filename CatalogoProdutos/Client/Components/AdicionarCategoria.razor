@@ -1,0 +1,15 @@
+﻿<MudCard>
+    <MudCardContent>
+        <MudText>Adicionar Categoria</MudText>
+        <MudTextField Label="Nome"
+                      @bind-Value="Categoria.Nome" For="@(() => Categoria.Nome)" />
+    </MudCardContent>
+    <MudCardActions>
+        <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Cadastrar</MudButton>
+    </MudCardActions>
+</MudCard>
+
+@code {
+    [Parameter]
+    public Categoria Categoria { get; set; }
+}
