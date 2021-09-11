@@ -22,7 +22,7 @@
 
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
 
-    [Parameter] public Categoria categoria { get; set; }
+    [Parameter] public Categoria item { get; set; }
 
     private void Cancel()
     {
@@ -31,16 +31,16 @@
 
     private async Task EditCategoria()
     {
-        categoria.Nome = nome;
+        item.Nome = nome;
 
-        await http.PutAsJsonAsync<Categoria>($"api/categorias/{categoria.Id}", categoria);
+        await http.PutAsJsonAsync<Categoria>($"api/categorias/{item.Id}", item);
         Snackbar.Add("Categoria Editada", Severity.Success);
-        MudDialog.Close(DialogResult.Ok(categoria));
+        MudDialog.Close(DialogResult.Ok(item));
     }
 
     // Inicializacao
     protected override void OnInitialized()
     {
-        nome = categoria.Nome;
+        nome = item.Nome;
     }
 }

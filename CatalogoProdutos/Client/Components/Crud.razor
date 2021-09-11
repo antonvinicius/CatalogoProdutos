@@ -1,7 +1,5 @@
 ﻿@typeparam T
 @typeparam TDialog
-
-@page "/items"
 @inject HttpClient http
 @inject IDialogService DialogService
 @inject ISnackbar Snackbar
@@ -23,8 +21,10 @@
                 @foreach (var item in items)
                 {
                     <MudItem xs="4">
-                        <CascadingValue Value="item">
-                            @ItemIndividual
+                        <CascadingValue Value="item" Name="Model">
+                            <CascadingValue Value="this" Name="Crud">
+                                @ItemIndividual
+                            </CascadingValue>
                         </CascadingValue>
                     </MudItem>
                 }

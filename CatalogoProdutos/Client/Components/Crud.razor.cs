@@ -8,7 +8,8 @@ using System.Threading.Tasks;
 
 namespace CatalogoProdutos.Client.Components
 {
-    public abstract partial class Crud<T, TDialog> where TDialog : ComponentBase
+    public partial class Crud<T, TDialog> : ComponentBase
+        where TDialog : ComponentBase
     {
         [Parameter]
         public string ApiResource { get; set; }
@@ -36,9 +37,15 @@ namespace CatalogoProdutos.Client.Components
         {
             try
             {
-                await http.PostAsJsonAsync<T>($"api/{ApiResource}", Model);
-                await LoadItems();
-                Snackbar.Add("Item adicionado", Severity.Success);
+                var result = await http.PostAsJsonAsync<T>($"api/{ApiResource}", Model);
+                if (result.IsSuccessStatusCode)
+                {
+                    await LoadItems();
+                    Snackbar.Add("Item adicionado", Severity.Success);
+                }else
+                {
+                    Snackbar.Add("Ocorreu um erro ao tentar adicionar o item", Severity.Error);
+                }
             }
             catch (Exception)
             {
@@ -55,12 +62,13 @@ namespace CatalogoProdutos.Client.Components
         }
 
         // Delete
-        async Task Delete(int id)
+        public async Task Delete(int id)
         {
             try
             {
                 await http.DeleteAsync($"api/{ApiResource}/{id}");
                 await LoadItems();
+                StateHasChanged();
             }
             catch (Exception)
             {
@@ -70,7 +78,7 @@ namespace CatalogoProdutos.Client.Components
 
         // Editar
         DialogOptions maxWidth = new DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = true };
-        async Task Editar(T item)
+        public async Task Editar(T item)
         {
             try
             {

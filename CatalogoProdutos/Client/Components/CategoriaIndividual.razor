@@ -11,14 +11,11 @@
 </MudCard>
 
 @code {
-    [Parameter]
+    [CascadingParameter(Name ="Model")]
     public Categoria Categoria { get; set; }
 
-    [Parameter]
-    public EventCallback<int> Delete { get; set; }
-
-    [Parameter]
-    public EventCallback<Categoria> Edit { get; set; }
+    [CascadingParameter(Name = "Crud")]
+    public Crud<Categoria, EditarCategoriaDialog> Crud { get; set; }
 
     [Inject] private IDialogService DialogService { get; set; }
 
@@ -31,13 +28,13 @@
 
         if (result == true)
         {
-            await Delete.InvokeAsync(Categoria.Id);
+            await Crud.Delete(Categoria.Id);
             Snackbar.Add("Categoria deletada!", Severity.Success);
         }
     }
 
     private async Task Editar()
     {
-        await Edit.InvokeAsync(Categoria);
+        await Crud.Editar(Categoria);
     }
 }

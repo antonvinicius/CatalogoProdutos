@@ -1,107 +1,14 @@
 ﻿@page "/categorias"
-@inject HttpClient http
-@inject IDialogService DialogService
-@inject ISnackbar Snackbar
 
-<MudContainer MaxWidth="MaxWidth.Large">
-    <MudContainer MaxWidth="MaxWidth.Small" Class="mt-5">
-        <EditForm Model="@model" OnValidSubmit="OnValidSubmit">
-            <DataAnnotationsValidator />
-            <AdicionarCategoria Categoria="model"/>
-        </EditForm>
-    </MudContainer>
-
-    <div class="mt-6">
-        @if (categorias != null)
-        {
-            <MudGrid>
-                @foreach (var categoria in categorias)
-                {
-                    <MudItem xs="4">
-                        <CategoriaIndividual Categoria="categoria" Delete="Delete" Edit="Editar"></CategoriaIndividual>
-                    </MudItem>
-                }
-            </MudGrid>
-        }
-        else
-        {
-            <MudText>Carregando...</MudText>
-        }
-    </div>
-</MudContainer>
+<Crud T="Categoria" TDialog="EditarCategoriaDialog" Model="categoria" ApiResource="categorias">
+    <ItemAdicionar>
+        <AdicionarCategoria />
+    </ItemAdicionar>
+    <ItemIndividual>
+        <CategoriaIndividual />
+    </ItemIndividual>
+</Crud>
 
 @code {
-    // Carrega
-    async Task LoadCategorias()
-    {
-        try
-        {
-            categorias = await http.GetFromJsonAsync<List<Categoria>>("api/categorias");
-        }
-        catch (Exception)
-        {
-            Snackbar.Add("Ocorreu um erro ao tentar recuperar as categorias", Severity.Error);
-        }
-    }
-
-    // Cadastro
-    Categoria model = new Categoria();
-
-    async Task OnValidSubmit()
-    {
-        try
-        {
-            await http.PostAsJsonAsync<Categoria>("api/categorias", model);
-            await LoadCategorias();
-            Snackbar.Add("Categoria adicionada", Severity.Success);
-        }
-        catch (Exception)
-        {
-            Snackbar.Add("Ocorreu um erro ao tentar adicionar uma categoria", Severity.Error);
-        }
-    }
-
-    // Lista
-    List<Categoria> categorias;
-
-    protected override async Task OnInitializedAsync()
-    {
-        await LoadCategorias();
-    }
-
-    // Delete
-    async Task Delete(int id)
-    {
-        try
-        {
-            await http.DeleteAsync($"api/categorias/{id}");
-            await LoadCategorias();
-        }
-        catch (Exception)
-        {
-            Snackbar.Add("Ocorreu um erro ao tentar deletar uma categoria", Severity.Error);
-        }
-    }
-
-    // Editar
-    DialogOptions maxWidth = new DialogOptions() { MaxWidth = MaxWidth.Medium, FullWidth = true };
-    async Task Editar(Categoria categoria)
-    {
-        try
-        {
-            var parameters = new DialogParameters { ["categoria"] = categoria };
-
-            var dialog = DialogService.Show<EditarCategoriaDialog>("Editar categoria", parameters, maxWidth);
-            var result = await dialog.Result;
-
-            if (!result.Cancelled)
-            {
-                await LoadCategorias();
-            }
-        }
-        catch (Exception)
-        {
-            Snackbar.Add("Ocorreu um erro ao tentar editar uma categoria", Severity.Error);
-        }
-    }
+    Categoria categoria = new Categoria();
 }
