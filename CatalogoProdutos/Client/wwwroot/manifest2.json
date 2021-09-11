@@ -1,0 +1,15 @@
+{
+  "name": "Catalogo de Produtos",
+  "short_name": "CP",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#03173d",
+  "icons": [
+    {
+      "src": "ms-icon-150x150.png",
+      "type": "image/png",
+      "sizes": "150x150"
+    }
+  ]
+}
