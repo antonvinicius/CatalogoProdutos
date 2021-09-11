@@ -10,6 +10,7 @@ namespace CatalogoProdutos.Shared
     {
         public int Id { get; set; }
         [Required(ErrorMessage = "Nome é obrigatório")]
+        [MinLength(3, ErrorMessage = "O nome precisa ter no mínimo 3 caracteres")]
         public string Nome { get; set; }
         public ICollection<Produto> Produtos { get; set; }
 

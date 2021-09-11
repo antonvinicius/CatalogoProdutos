@@ -1,7 +1,55 @@
 ﻿@page "/"
 @inject NavigationManager nav
+@inject HttpClient http
 
-<MudContainer MaxWidth="MaxWidth.Medium" Class="mt-10">
+<MudContainer Class="mt-10 mb-10" MaxWidth="MaxWidth.Medium">
+    <div class="d-flex mt-10 mb-10 align-center justify-space-around">
+        <img src="./fav/ms-icon-150x150.png" alt="Logo"/>
+        <MudText Typo="Typo.h2">Catálogo de Produtos</MudText>
+    </div>
+
+    <MudSelect T="int" ValueChanged="handleChange" AutoFocus="true" Label="Selecione uma categoria" AdornmentIcon="@Icons.Material.Filled.Search">
+        <MudSelectItem Value="-1">Todos</MudSelectItem>
+        @foreach (var categoria in categorias)
+        {
+            <MudSelectItem Value="@categoria.Id">@categoria.Nome</MudSelectItem>
+        }
+    </MudSelect>
+    <MudGrid Class="mt-10">
+        @if (produtos == null)
+        {
+            <MudAlert Severity="Severity.Info">@Mensagem</MudAlert>
+        }
+        else if (produtos.Count == 0)
+        {
+            <MudAlert Severity="Severity.Info">@Mensagem</MudAlert>
+        }
+        else
+        {
+            @foreach (var produto in produtos)
+            {
+                <MudItem xs="6">
+                    <MudCard Elevation="1" Style="min-height: 200px;">
+                        <MudCardHeader>
+                            <CardHeaderContent>
+                                <MudText Typo="Typo.h6">@produto.Nome</MudText>
+                            </CardHeaderContent>
+                            <CardHeaderActions>
+                                <MudIconButton Icon="@Icons.Material.Filled.AddShoppingCart" Color="Color.Default" />
+                            </CardHeaderActions>
+                        </MudCardHeader>
+                        <MudCardContent>
+                            <MudText>@produto.Preco.ToString("C")</MudText>
+                        </MudCardContent>
+                    </MudCard>
+                </MudItem>
+            }
+        }
+    </MudGrid>
+</MudContainer>
+
+@*Créditos*@
+<MudContainer MaxWidth="MaxWidth.Medium" Class="mt-10 mb-10">
     <MudPaper Class="mx-auto pa-6">
         <h1>Catálogo de Produtos</h1>
         <p>Um app desenvolvido por Antônio Vinícius.</p>
@@ -9,9 +57,44 @@
                    Target="_blank"
                    Variant="Variant.Filled"
                    EndIcon="@Icons.Custom.Brands.GitHub"
-                   Color="Color.Primary"
-                   >
-            GitHub
+                   Color="Color.Primary">
+            GITHUB
         </MudButton>
     </MudPaper>
 </MudContainer>
+
+@code {
+    private string Mensagem = "Carregando";
+    private List<Produto> produtos = new List<Produto>();
+    private List<Categoria> categorias = new List<Categoria>();
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            produtos = await http.GetFromJsonAsync<List<Produto>>("api/produtos");
+            categorias = await http.GetFromJsonAsync<List<Categoria>>("api/categorias");
+        }
+        catch (Exception)
+        {
+            Mensagem = "Erro ao recuperar os produtos";
+            StateHasChanged();
+        }
+    }
+
+    public async Task handleChange(int categoriaId)
+    {
+        Console.WriteLine(categoriaId);
+        if (categoriaId == -1)
+        {
+            produtos = await http.GetFromJsonAsync<List<Produto>>($"api/produtos/");
+        }
+        else
+        {
+            produtos = await http.GetFromJsonAsync<List<Produto>>($"api/produtos/categoria/{categoriaId}");
+        }
+
+        if (produtos.Count == 0)
+            Mensagem = "Não há produtos cadastrados para esta categoria";
+        StateHasChanged();
+    }
+}
